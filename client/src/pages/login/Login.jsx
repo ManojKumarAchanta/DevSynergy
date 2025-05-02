@@ -9,7 +9,8 @@ import {
 } from "../../components/ui/card";
 import { Input } from "../../components/ui/input";
 import { Label } from "../../components/ui/label";
-import AuthLayout from "../AuthLayout"; // Adjust path if needed
+import { Checkbox } from "../../components/ui/checkbox";
+import AuthLayout from "../AuthLayout";
 
 const Login = ({
   handleSubmit,
@@ -52,6 +53,10 @@ const Login = ({
                 placeholder="Password"
               />
             </div>
+            <div className="flex items-center space-x-2">
+        <Checkbox id="terms" />
+        <Label htmlFor="terms">Accept terms and conditions</Label>
+      </div>
             <Button
               type="submit"
               className="w-full"
@@ -66,7 +71,6 @@ const Login = ({
           )}
         </CardContent>
         <CardFooter className="text-center text-xs text-muted-foreground mx-auto">
-          {/* Optional Footer Content */}
         </CardFooter>
       </Card>
     </AuthLayout>
