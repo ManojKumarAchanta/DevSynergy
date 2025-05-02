@@ -1,8 +1,9 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Button } from '../components/ui/button';
+import { Button } from '../../../components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import AuthLayout from '@/pages/AuthLayout';
 
 const UpdatePassword = () => {
   const navigate = useNavigate();
@@ -35,7 +36,7 @@ const UpdatePassword = () => {
   };
 
   return (
-    <main className="grid grid-cols-1 md:grid-cols-2 items-center justify-center min-h-screen bg-gray-200">
+    <AuthLayout>
       <div className="max-w-md w-full mx-auto mt-10 bg-white shadow-lg rounded-2xl p-6">
         <h2 className="text-xl font-semibold mb-6">Create New Password</h2>
         <div className="mb-4">
@@ -48,7 +49,9 @@ const UpdatePassword = () => {
           />
         </div>
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Confirm Password</label>
+          <label className="block text-sm font-medium mb-1">
+            Confirm Password
+          </label>
           <input
             type="password"
             value={confirmPassword}
@@ -66,16 +69,17 @@ const UpdatePassword = () => {
           </p>
         )}
         <div className="flex justify-between mt-6">
-          <Button variant="outline" className="bg-black text-white" onClick={handleBackToLogin}>
+          <Button
+            variant="outline"
+            className="bg-black text-white"
+            onClick={handleBackToLogin}
+          >
             Back to Login
           </Button>
           <Button onClick={handleSave}>Save</Button>
         </div>
       </div>
-      <div className="hidden md:block h-full">
-        <img src="/image1.jpg" alt="Auth" className="min-h-screen object-cover w-full" />
-      </div>
-    </main>
+    </AuthLayout>
   );
 };
 

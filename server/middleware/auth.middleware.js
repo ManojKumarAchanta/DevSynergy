@@ -22,7 +22,7 @@ export const authMiddleware = (req, res, next) => {
   } catch (err) {
     // console.error('Token verification error:', err);
     return res
-      .status(403)
+      .status(401)
       .json({ message: 'Invalid or expired token', success: false });
   }
 };
