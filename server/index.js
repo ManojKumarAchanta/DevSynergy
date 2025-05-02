@@ -2,11 +2,17 @@ import express from 'express';
 import { configDotenv } from 'dotenv';
 import connectToDB from './db/config.js';
 import cors from 'cors';
-import authRouter from './routes/auth.route.js';
-import { authMiddleware } from './middleware/auth.middleware.js';
-import profileRouter from './routes/profile.route.js';
 import cookieParser from 'cookie-parser';
+
+//middlewares
+import { authMiddleware } from './middleware/auth.middleware.js';
+
+//routers
+import authRouter from './routes/auth.route.js';
+import profileRouter from './routes/profile.route.js';
 import postRouter from './routes/post.route.js';
+import commentRouter from './routes/comment.route.js';
+import likeRouter from './routes/like.route.js';
 
 const app = express();
 
@@ -22,7 +28,10 @@ app.use(cookieParser());
 //routes
 app.use('/auth', authRouter);
 app.use('/profile', authMiddleware, profileRouter);
-app.use("/posts",authMiddleware, postRouter);
+app.use('/posts', authMiddleware, postRouter);
+app.use('/comments', authMiddleware, commentRouter);
+app.use('/like', authMiddleware, likeRouter);
+
 app.listen(PORT, () => {
   connectToDB();
   console.log('server running at port http://localhost:8000');
