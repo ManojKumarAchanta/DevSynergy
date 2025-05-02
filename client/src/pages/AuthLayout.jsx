@@ -7,7 +7,7 @@ const AuthLayout = ({children}) => {
               {children}
         </div>
           <div className="hidden md:block bg-auth-pattern bg-cover bg-center h-full">
-              <img src="/image1.jpg" alt="" className='min-h-screen'/>
+              <img src="/image4.jpg" alt="" className='min-h-screen'/>
         </div>
     </main>
   )
