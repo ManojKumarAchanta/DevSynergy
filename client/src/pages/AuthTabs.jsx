@@ -17,6 +17,7 @@ import {
   TabsTrigger,
   TabsContent,
 } from "../components/ui/tabs";
+import ForgotPassword from "./ForgotPassword";
 
 const AuthTabs = () => {
   const [formData, setFormData] = useState({
@@ -118,8 +119,8 @@ const AuthTabs = () => {
                 <Button type="submit" className="w-full" disabled={isLoading}>
                   {isLoading ? "Logging in..." : "Login"}
                 </Button>
-                <div>
-                
+                <div className="text-center">
+                    <ForgotPassword />
                 </div>
               </form>
 
