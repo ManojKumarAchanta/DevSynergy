@@ -2,7 +2,7 @@ import React from 'react'
 
 const AuthLayout = ({children}) => {
   return (
-    <main className="grid grid-cols-2 items-center justify-center min-h-screen bg-gray-100">
+    <main className="grid grid-cols-2 items-center justify-center min-h-screen bg-gray-400">
           <div className="flex items-center justify-center h-screen bg-white">
               {children}
         </div>
