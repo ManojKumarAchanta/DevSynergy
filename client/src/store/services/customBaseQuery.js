@@ -1,6 +1,6 @@
 // services/customBaseQuery.js
 import { fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { setCredentials, logout } from '../slices/authSlice';
+import { logout, updateToken } from '../slices/authSlice';
 import { BASE_URL } from '@/constants';
 
 const baseQuery = fetchBaseQuery({
@@ -24,21 +24,20 @@ export const customBaseQuery = async (args, api, extraOptions) => {
       {
         url: '/refreshtoken',
         method: 'POST',
+        body: { refreshToken: api.getState().auth.refreshToken }
       },
       api,
       extraOptions
     );
 
     if (refreshResult.data) {
-      const { accessToken, user } = refreshResult.data;
+      // Store new tokens
+      api.dispatch(updateToken(refreshResult.data.accessToken));
 
-      // Store new token and user
-      api.dispatch(setCredentials({ accessToken, user }));
-
-      // Retry original request
+      // Retry original request with new token
       result = await baseQuery(args, api, extraOptions);
     } else {
-      // Refresh failed — force logout
+      // Refresh failed - logout user
       api.dispatch(logout());
     }
   }

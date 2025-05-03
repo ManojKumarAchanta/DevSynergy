@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   const { user } = useSelector((state) => state.auth);
@@ -14,7 +15,7 @@ const Home = () => {
             <div className="space-y-4">
               <div className="flex items-center gap-4">
                 <img 
-                  src={user.avatarUrl || 'https://ui-avatars.com/api/?name=' + (user.name || 'User')} 
+                  src={user.avatarUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.name || 'User')}`} 
                   alt="Profile" 
                   className="w-20 h-20 rounded-full object-cover"
                 />
@@ -58,6 +59,15 @@ const Home = () => {
                   <div className="font-semibold">{user.projects?.length || 0}</div>
                   <div className="text-gray-600">Projects</div>
                 </div>
+              </div>
+
+              <div className="border-t pt-4">
+                <Link 
+                  to="/profile" 
+                  className="inline-block px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                >
+                  View Full Profile
+                </Link>
               </div>
             </div>
           )}

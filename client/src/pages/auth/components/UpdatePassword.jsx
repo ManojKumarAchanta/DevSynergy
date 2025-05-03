@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { Button } from '../../../components/ui/button';
 import { useNavigate } from 'react-router-dom';
+import AuthLayout from '@/layouts/AuthLayout';
 // import AuthLayout from '@/pages/main';
 
 const UpdatePassword = () => {

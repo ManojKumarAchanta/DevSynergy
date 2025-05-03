@@ -5,16 +5,15 @@ import { EyeClosed } from 'lucide-react'
 import { EyeIcon } from 'lucide-react'
 import React from 'react'
 import { useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { useSignupMutation } from '@/store/services/authApi'
 import toast from 'react-hot-toast'
 import EmailVerification from './model/EmailVerification'
 
 const Signup = () => {
-  const navigate = useNavigate();
   const [signup, { isLoading }] = useSignupMutation();
   const [showPassword, setShowPassword] = useState(false);
-  const [showVerificationModal, setShowVerificationModal] = useState(false);
+ 
   const [formData, setFormData] = useState({
     username: '',
     name: '',
@@ -103,7 +102,7 @@ const Signup = () => {
     try {
       await signup(formData).unwrap();
       toast.success('Account created successfully!');
-      setShowVerificationModal(true);
+      // setShowVerificationModal(true);
     } catch (error) {
       if (error.status === 400) {
         toast.error("Username or email already exists");
@@ -113,10 +112,7 @@ const Signup = () => {
     }
   };
 
-  const handleModalClose = () => {
-    setShowVerificationModal(false);
-    navigate('/home');
-  };
+ 
 
   return (
     <AuthLayout>
@@ -226,11 +222,7 @@ const Signup = () => {
         </div>
       </div>
 
-      <EmailVerification 
-        isOpen={showVerificationModal}
-        onClose={handleModalClose}
-        email={formData.email}
-      />
+      
     </AuthLayout>
   )
 }

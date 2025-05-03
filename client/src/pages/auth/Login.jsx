@@ -1,20 +1,20 @@
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import AuthLayout from '@/layouts/AuthLayout';
-import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import * as React from 'react';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import ForgotPassword from './model/ForgotPassword';
-import { useState } from 'react';
-import { EyeIcon } from 'lucide-react';
-import { EyeClosed } from 'lucide-react';
+import { EyeIcon, EyeOff } from 'lucide-react';
 import { useLoginMutation } from '@/store/services/authApi';
 import toast from 'react-hot-toast';
 import { useDispatch } from 'react-redux';
 import { setCredentials } from '@/store/slices/authSlice';
+import { useState } from 'react';
 
-const Login = () => {
+const Login=()=> {
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const location = useLocation();
   const [login, { isLoading }] = useLoginMutation();
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState({
@@ -86,20 +86,22 @@ const Login = () => {
         email: formData.email,
         password: formData.password
       }).unwrap();
+
+      // Extract the required data from the response
+      const { accessToken, refreshToken, user, message } = result;
       
-      // Properly structure the credentials before dispatching
-      const credentials = {
-        accessToken: result.accessToken,
-        user: result.user
-      };
+      // Update Redux store with credentials
+      dispatch(setCredentials({ accessToken, refreshToken, user }));
       
-      dispatch(setCredentials(credentials));
-      toast.success(result.message || 'Successfully logged in!');
-      navigate('/home');
+      // Show success message
+      toast.success(message || 'Successfully logged in!');
+      
+      // Navigate to the intended page or home
+      const from = location.state?.from?.pathname || '/home';
+      navigate(from, { replace: true });
     } catch (error) {
-      // Handle specific API errors if needed
       if (error.status === 400) {
-        toast.error("Invalid Credentials")
+        toast.error(error.data?.message || "Invalid credentials");
       } else {
         toast.error('Login failed. Please try again later.');
       }
@@ -154,7 +156,7 @@ const Login = () => {
                 >
                   {showPassword ? 
                     <EyeIcon className="h-5 w-5 text-gray-500" /> : 
-                    <EyeClosed className="h-5 w-5 text-gray-500" />
+                    <EyeOff className="h-5 w-5 text-gray-500" />
                   }
                 </div>
               </div>
@@ -185,6 +187,6 @@ const Login = () => {
       </div>
     </AuthLayout>
   );
-};
+}
 
 export default Login;

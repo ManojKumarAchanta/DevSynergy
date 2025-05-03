@@ -43,7 +43,7 @@ const EmailVerification = ({ isOpen, onClose, email }) => {
 
   const handleClose = () => {
     onClose();
-    navigate('/home');
+    navigate('/profile');
   };
 
   return (
