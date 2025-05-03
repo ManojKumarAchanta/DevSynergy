@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import AuthLayout from '../../AuthLayout';
+import AuthLayout from '../../main';
 import { Button } from '../../../components/ui/button';
 import {
   Card,
@@ -83,56 +83,65 @@ const AuthTabs = () => {
 
   return (
     <AuthLayout>
-      <Tabs defaultValue="login" className="md:w-[50%] w-[60%] shadow-lg p-6 rounded-md">
-        <TabsList className="grid w-full grid-cols-2 mb-6 bg-[#e0f0ff]">
-          <TabsTrigger value="login">Login</TabsTrigger>
-          <TabsTrigger value="signup">Sign Up</TabsTrigger>
+      <Tabs
+        defaultValue="login"
+        className="w-full max-w-md mx-auto shadow-lg rounded-lg bg-white"
+      >
+        <TabsList className="grid w-full grid-cols-2 mb-6 bg-[#e0f0ff] rounded-t-lg">
+          <TabsTrigger value="login" className="data-[state=active]:bg-white">Login</TabsTrigger>
+          <TabsTrigger value="signup" className="data-[state=active]:bg-white">Sign Up</TabsTrigger>
         </TabsList>
 
         <TabsContent value="login">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-center text-2xl">Login</CardTitle>
+          <Card className="border-none shadow-none">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-center text-2xl font-semibold text-gray-800">Login</CardTitle>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleLoginSubmit} className="space-y-6">
-                <div className="space-y-1">
-                  <Label htmlFor="email">Email</Label>
+              <form onSubmit={handleLoginSubmit} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="text-sm font-medium text-left block">Email</Label>
                   <Input
                     type="email"
                     name="email"
                     id="email"
                     onChange={handleChange}
                     onFocus={handleFocus}
-                    placeholder="Email"
+                    placeholder="Enter your email"
+                    className="w-full"
                   />
                 </div>
-                <div className="space-y-1">
-                  <Label htmlFor="password">Password</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="password" className="text-sm font-medium text-left block">Password</Label>
                   <Input
                     type="password"
                     name="password"
                     id="password"
                     onChange={handleChange}
                     onFocus={handleFocus}
-                    placeholder="Password"
+                    placeholder="Enter your password"
+                    className="w-full"
                   />
                 </div>
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2 py-2">
                   <Checkbox id="login-terms" />
-                  <Label htmlFor="login-terms">
+                  <Label htmlFor="login-terms" className="text-sm text-gray-600">
                     Accept terms and conditions
                   </Label>
                 </div>
-                <Button type="submit" className="w-full" disabled={isLoading}>
+                <Button 
+                  type="submit" 
+                  className="w-full bg-blue-600 hover:bg-blue-700 transition-colors" 
+                  disabled={isLoading}
+                >
                   {isLoading ? 'Logging in...' : 'Login'}
                 </Button>
-                <div className="text-center">
+                <div className="text-center pt-2">
                   <ForgotPassword />
                 </div>
               </form>
               {isError && (
-                <p className="text-sm text-center text-red-600 mt-4">
+                <p className="text-sm text-center text-red-600 mt-4 p-2 bg-red-50 rounded">
                   {message}
                 </p>
               )}
@@ -141,68 +150,72 @@ const AuthTabs = () => {
         </TabsContent>
 
         <TabsContent value="signup">
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-center text-2xl">Sign Up</CardTitle>
+          <Card className="border-none shadow-none">
+            <CardHeader className="pb-4">
+              <CardTitle className="text-center text-2xl font-semibold text-gray-800">Sign Up</CardTitle>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleSignupSubmit} className="space-y-6">
-                <div className="space-y-1">
-                  <Label htmlFor="fullname">Full Name</Label>
+              <form onSubmit={handleSignupSubmit} className="space-y-4">
+                <div className="space-y-2">
+                  <Label htmlFor="fullname" className="text-sm font-medium text-left block">Full Name</Label>
                   <Input
                     type="text"
                     name="fullname"
                     id="fullname"
                     onChange={handleChange}
                     onFocus={handleFocus}
-                    placeholder="Full Name"
+                    placeholder="Enter your full name"
+                    className="w-full"
                   />
                 </div>
-                <div className="space-y-1">
-                  <Label htmlFor="username">User Name</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="username" className="text-sm font-medium text-left block">Username</Label>
                   <Input
                     type="text"
                     name="username"
                     id="username"
                     onChange={handleChange}
                     onFocus={handleFocus}
-                    placeholder="Username"
+                    placeholder="Choose a username"
+                    className="w-full"
                   />
                 </div>
-                <div className="space-y-1">
-                  <Label htmlFor="email">Email</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="email" className="text-sm font-medium text-left block">Email</Label>
                   <Input
                     type="email"
                     name="email"
                     id="email"
                     onChange={handleChange}
                     onFocus={handleFocus}
-                    placeholder="Email"
+                    placeholder="Enter your email"
+                    className="w-full"
                   />
                 </div>
-                <div className="space-y-1">
-                  <Label htmlFor="password">Password</Label>
+                <div className="space-y-2">
+                  <Label htmlFor="password" className="text-sm font-medium text-left block">Password</Label>
                   <Input
                     type="password"
                     name="password"
                     id="password"
                     onChange={handleChange}
                     onFocus={handleFocus}
-                    placeholder="Password"
+                    placeholder="Choose a password"
+                    className="w-full"
                   />
                 </div>
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center space-x-2 py-2">
                   <Checkbox id="signup-terms" />
-                  <Label htmlFor="signup-terms">
+                  <Label htmlFor="signup-terms" className="text-sm text-gray-600">
                     Accept terms and conditions
                   </Label>
                 </div>
-                <Button type="submit" className="w-full" disabled={isLoading}>
+                <Button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 transition-colors" disabled={isLoading}>
                   {isLoading ? 'Signing up...' : 'Sign Up'}
                 </Button>
               </form>
               {isError && (
-                <p className="text-sm text-center text-red-600 mt-4">
+                <p className="text-sm text-center text-red-600 mt-4 p-2 bg-red-50 rounded">
                   {message}
                 </p>
               )}

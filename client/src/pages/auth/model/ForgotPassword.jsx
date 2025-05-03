@@ -34,52 +34,52 @@ const ForgotPassword = () => {
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <Button variant="link" className="p-0 text-blue-600 hover:underline">
+        <Button variant="link" className="text-base md:text-lg hover:text-blue-700 transition-colors">
           Forgot Password?
         </Button>
       </DialogTrigger>
-
-      <DialogContent className="sm:max-w-[400px]">
+      <DialogContent className="sm:max-w-[425px]">
+        <DialogHeader>
+          <DialogTitle>Reset Password</DialogTitle>
+          <DialogDescription>
+            Enter your email address below to receive password reset instructions.
+          </DialogDescription>
+        </DialogHeader>
+        
         {!verified ? (
           <>
-            <DialogHeader>
-              <DialogTitle>Reset Password</DialogTitle>
-              <DialogDescription>
-                Enter your email address to receive a reset link.
-              </DialogDescription>
-            </DialogHeader>
-            <div className="py-4">
-              <Label htmlFor="email" className="mb-1 block">
-                Email Address
-              </Label>
-              <Input
-                id="email"
-                type="email"
-                placeholder="example@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
+            <div className="grid gap-4 py-4">
+              <div className="grid gap-2">
+                <Label htmlFor="email">Email</Label>
+                <Input
+                  id="email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email"
+                  className="w-full"
+                />
+              </div>
             </div>
             <DialogFooter>
-              <Button onClick={handleVerify}>Verify</Button>
+              <Button onClick={handleVerify} className="w-full">
+                Send Reset Link
+              </Button>
             </DialogFooter>
           </>
         ) : (
-          <>
-            <div className="flex flex-col items-center justify-center text-center space-y-4 py-6">
-              <CheckCircle2 className="text-green-500 w-16 h-16" />
-              <h3 className="text-lg font-semibold text-green-600">
-                Verify your Email
-              </h3>
-              <p className="text-sm text-gray-600">
-                Link shared to the email: <br />
-                <span className="font-medium text-black">{email}</span>
+          <div className="flex flex-col items-center justify-center py-6 gap-4">
+            <CheckCircle2 className="h-12 w-12 text-green-500" />
+            <div className="text-center">
+              <h3 className="text-lg font-semibold mb-2">Email Sent!</h3>
+              <p className="text-gray-600">
+                Please check your email for password reset instructions.
               </p>
-              <Button variant="outline" onClick={handleClose}>
-                Close
-              </Button>
             </div>
-          </>
+            <Button onClick={handleClose} className="mt-4">
+              Close
+            </Button>
+          </div>
         )}
       </DialogContent>
     </Dialog>
