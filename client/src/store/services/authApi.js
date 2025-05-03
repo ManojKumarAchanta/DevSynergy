@@ -1,46 +1,68 @@
-import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react';
-import { setCredentials, logout } from '../store/authSlice';
-import { store } from '../store';
-import { AUTH_URL } from '@/constants';
+import { BASE_URL } from '@/constants';
+import { createApi } from '@reduxjs/toolkit/query/react';
+import { customBaseQuery } from './customBaseQuery';
 
-
-const baseQuery = fetchBaseQuery({
-  baseUrl: AUTH_URL,
-  credentials: 'include', // sends refresh token cookie
-  prepareHeaders: (headers) => {
-    const token = store.getState().auth.accessToken;
-    if (token) headers.set('authorization', `Bearer ${token}`);
-    return headers;
-  },
+export const authApi = createApi({
+  reducerPath: 'authApi',
+  baseQuery: customBaseQuery,
+  endpoints: (builder) => ({
+    login: builder.mutation({
+      query: ({ email, password }) => ({
+        url: '/login',
+        method: 'POST',
+        body: { email, password },
+      }),
+    }),
+    refreshToken: builder.mutation({
+      query: () => ({
+        url: '/refreshtoken',
+        method: 'POST',
+        body: {},
+      }),
+    }),
+    signup: builder.mutation({
+      query: ({ name, username, email, password }) => ({
+        url: '/signup',
+        method: 'POST',
+        body: { name, username, email, password },
+      }),
+    }),
+    forgotPassword: builder.mutation({
+      query: ({ email }) => ({
+        url: '/forgotpasword',
+        method: 'POST',
+        body: { email },
+      }),
+    }),
+    resetPassword: builder.mutation({
+      query: ({ password, token }) => ({
+        url: `/reset-password?token=${encodeURIComponent(token)}`,
+        method: 'POST',
+        body: { password },
+      }),
+    }),
+    verifyEmail: builder.mutation({
+      query: ({ token }) => ({
+        url: `/verifyemail?token=${token}`,
+        method: 'POST',
+        body: {},
+      }),
+    }),
+    logout: builder.mutation({
+      query: () => ({
+        url: '/logout',
+        method: 'POST',
+      }),
+    }),
+  }),
 });
 
-// wrapper for auto-refresh
-const baseQueryWithReauth = async (args, api, extraOptions) => {
-  let result = await baseQuery(args, api, extraOptions);
-
-  if (result?.error?.status === 401) {
-    // try refresh
-    const refreshResult = await baseQuery(
-      '/auth/refresh-token',
-      api,
-      extraOptions
-    );
-    if (refreshResult?.data?.accessToken) {
-      // update token
-      store.dispatch(
-        setCredentials({ accessToken: refreshResult.data.accessToken })
-      );
-      // retry original request
-      result = await baseQuery(args, api, extraOptions);
-    } else {
-      store.dispatch(logout());
-    }
-  }
-
-  return result;
-};
-
-export const api = createApi({
-  baseQuery: baseQueryWithReauth,
-  endpoints: () => ({}), // add endpoints here
-});
+export const {
+  useLoginMutation,
+  useLogoutMutation,
+  useForgotPasswordMutation,
+  useResetPasswordMutation,
+  useVerifyEmailMutation,
+  useSignupMutation,
+  useRefreshTokenMutation,
+} = authApi;

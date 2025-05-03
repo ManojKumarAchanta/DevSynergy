@@ -1,1 +1,1 @@
-export const AUTH_URL="https://techconqueris.onrender.com/auth"
+export const BASE_URL="https://techconqueris.onrender.com/auth"

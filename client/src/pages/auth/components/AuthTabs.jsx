@@ -6,7 +6,6 @@ import {
   CardHeader,
   CardTitle,
   CardContent,
-  CardFooter,
 } from '../../../components/ui/card';
 import { Input } from '../../../components/ui/input';
 import { Label } from '../../../components/ui/label';
@@ -18,6 +17,11 @@ import {
   TabsContent,
 } from '../../../components/ui/tabs';
 import ForgotPassword from '../model/ForgotPassword';
+import { useLoginMutation } from '@/store/services/authApi';
+// import { useSelector } from 'react-redux';
+
+// import your auth selector or remove if unused
+// import { authSelector } from '@/store/slices/authSlice';
 
 const AuthTabs = () => {
   const [formData, setFormData] = useState({
@@ -27,12 +31,14 @@ const AuthTabs = () => {
     password: '',
   });
 
-  const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [message, setMessage] = useState('');
 
+  const [login, { isLoading }] = useLoginMutation();
+
   const handleChange = (e) => {
-    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleFocus = () => {
@@ -40,51 +46,51 @@ const AuthTabs = () => {
     setMessage('');
   };
 
-  const handleLoginSubmit = (e) => {
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
+    const { email, password } = formData;
 
-    setTimeout(() => {
-      setIsLoading(false);
-      if (formData.email && formData.password) {
-        console.log('Logged in with', formData);
-      } else {
-        setIsError(true);
-        setMessage('Please enter both email and password.');
-      }
-    }, 1000);
+    if (!email || !password) {
+      setIsError(true);
+      setMessage('Please enter email and password.');
+      return;
+    }
+
+    try {
+      const result = await login({ email, password }).unwrap();
+      console.log('Login success:', result);
+    } catch (err) {
+      console.error('Login error:', err);
+      setIsError(true);
+      setMessage(err?.data?.message || 'Login failed');
+    }
   };
 
   const handleSignupSubmit = (e) => {
     e.preventDefault();
-    setIsLoading(true);
+    const { fullname, username, email, password } = formData;
 
-    setTimeout(() => {
-      setIsLoading(false);
-      if (
-        formData.fullname &&
-        formData.username &&
-        formData.email &&
-        formData.password
-      ) {
-        console.log('Signed up with', formData);
-      } else {
-        setIsError(true);
-        setMessage('Please fill all the fields.');
-      }
-    }, 1000);
+    if (!fullname || !username || !email || !password) {
+      setIsError(true);
+      setMessage('Please fill all the fields.');
+      return;
+    }
+
+    console.log('Signed up with:', formData);
+    setIsError(false);
+    setMessage('Signup successful! You can now log in.');
   };
 
   return (
     <AuthLayout>
-      <Tabs defaultValue="login" className="w-full shadow-lg p-6 rounded-md">
+      <Tabs defaultValue="login" className="md:w-[50%] w-[60%] shadow-lg p-6 rounded-md">
         <TabsList className="grid w-full grid-cols-2 mb-6 bg-[#e0f0ff]">
           <TabsTrigger value="login">Login</TabsTrigger>
           <TabsTrigger value="signup">Sign Up</TabsTrigger>
         </TabsList>
 
         <TabsContent value="login">
-          <Card className="">
+          <Card>
             <CardHeader>
               <CardTitle className="text-center text-2xl">Login</CardTitle>
             </CardHeader>
@@ -125,7 +131,6 @@ const AuthTabs = () => {
                   <ForgotPassword />
                 </div>
               </form>
-
               {isError && (
                 <p className="text-sm text-center text-red-600 mt-4">
                   {message}
@@ -136,7 +141,7 @@ const AuthTabs = () => {
         </TabsContent>
 
         <TabsContent value="signup">
-          <Card className="">
+          <Card>
             <CardHeader>
               <CardTitle className="text-center text-2xl">Sign Up</CardTitle>
             </CardHeader>
@@ -196,7 +201,6 @@ const AuthTabs = () => {
                   {isLoading ? 'Signing up...' : 'Sign Up'}
                 </Button>
               </form>
-
               {isError && (
                 <p className="text-sm text-center text-red-600 mt-4">
                   {message}
