@@ -1,11 +1,10 @@
-// services/customBaseQuery.js
 import { fetchBaseQuery } from '@reduxjs/toolkit/query/react';
 import { logout, updateToken } from '../slices/authSlice';
 import { BASE_URL } from '@/constants';
 
 const baseQuery = fetchBaseQuery({
   baseUrl: BASE_URL,
-  credentials: 'include', // Send cookies (important for refresh token in cookies)
+  credentials: 'include', // Required for cookies to be sent
   prepareHeaders: (headers, { getState }) => {
     const token = getState().auth.accessToken;
     if (token) {
@@ -18,26 +17,26 @@ const baseQuery = fetchBaseQuery({
 export const customBaseQuery = async (args, api, extraOptions) => {
   let result = await baseQuery(args, api, extraOptions);
 
-  if (result.error && result.error.status === 401) {
-    // Try to refresh token
+  if (result.error?.status === 401) {
+    // Try to refresh access token
     const refreshResult = await baseQuery(
       {
         url: '/refreshtoken',
         method: 'POST',
-        body: { refreshToken: api.getState().auth.refreshToken },
+        // Don't send refreshToken manually if it's in cookie
       },
       api,
       extraOptions
     );
 
-    if (refreshResult.data) {
-      // Store new tokens
+    if (refreshResult.data?.accessToken) {
+      // Update the new access token
       api.dispatch(updateToken(refreshResult.data.accessToken));
 
-      // Retry original request with new token
+      // Retry the original request
       result = await baseQuery(args, api, extraOptions);
     } else {
-      // Refresh failed - logout user
+      // Refresh failed, logout user
       api.dispatch(logout());
     }
   }
