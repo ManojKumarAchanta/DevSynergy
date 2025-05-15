@@ -25,11 +25,15 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
   cors({
-    origin: '*',
-    methods: ['GET', 'PUT', 'PATCH', 'POST'],
+    origin: [
+      'http://localhost:5173', // local dev
+      'https://dev-synergy-client.vercel.app', // deployed frontend
+    ],
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
   })
 );
+
 app.use(cookieParser());
 //routes
 app.use('/auth', authRouter);
