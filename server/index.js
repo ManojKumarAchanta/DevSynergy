@@ -27,7 +27,7 @@ app.use(
   cors({
     origin: [
       'http://localhost:5173',
-      'https://dev-synergy-jupm9vojx-manojkumar2055s-projects.vercel.app',
+      'https://dev-synergy-git-main-manojkumar2055s-projects.vercel.app',
     ],
     methods: ['GET', 'PUT', 'PATCH', 'POST'],
     credentials: true,

@@ -24,7 +24,7 @@ export const customBaseQuery = async (args, api, extraOptions) => {
       {
         url: '/refreshtoken',
         method: 'POST',
-        body: { refreshToken: api.getState().auth.refreshToken }
+        body: { refreshToken: api.getState().auth.refreshToken },
       },
       api,
       extraOptions
