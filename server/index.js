@@ -25,10 +25,7 @@ app.use(express.urlencoded({ extended: true }));
 
 app.use(
   cors({
-    origin: [
-      'http://localhost:5173',
-      'https://dev-synergy-git-main-manojkumar2055s-projects.vercel.app',
-    ],
+    origin: '*',
     methods: ['GET', 'PUT', 'PATCH', 'POST'],
     credentials: true,
   })
