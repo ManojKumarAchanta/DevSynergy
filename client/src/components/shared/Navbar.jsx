@@ -1,4 +1,3 @@
-
 import { Sheet, SheetTrigger, SheetContent } from '@/components/ui/sheet';
 import { Button } from '@/components/ui/button';
 import { Link } from 'react-router-dom';
@@ -8,18 +7,16 @@ import { useLogoutMutation } from '@/store/services/authApi';
 import toast from 'react-hot-toast';
 
 export default function Navbar() {
-  const [logout,{isError, isLoading}] = useLogoutMutation();
-  const handleLogout=async()=>{
+  const [logout, { isError, isLoading }] = useLogoutMutation();
+  const handleLogout = async () => {
     try {
-      await logout();
-      toast.success("Logged out Successfully!")
+      await logout().unwrap();
+      toast.success('Logged out Successfully!');
     } catch (error) {
-      toast.error("Failed to logout");
-      console.log(
-        error
-      )
+      toast.error('Failed to logout');
+      console.log(error);
     }
-  }
+  };
   const isAuthenticated = useSelector(selectIsAuthenticated);
   return (
     <header className="flex h-16 w-full shrink-0 items-center px-4 md:px-6 shadow-sm border-b border border-gray-200">
@@ -68,45 +65,48 @@ export default function Navbar() {
         <span className="text-lg font-semibold">DevSynergy</span>
       </Link>
       <nav className="ml-auto hidden lg:flex gap-6">
-        {(!isAuthenticated)?(<div>
-          <Link
-          href="#"
-          className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-gray-100/50 data-[state=open]:bg-gray-100/50 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus:bg-gray-800 dark:focus:text-gray-50 dark:data-[active]:bg-gray-800/50 dark:data-[state=open]:bg-gray-800/50"
-          prefetch={false}
-        >
-          Docs
-        </Link>
-        <Link
-          href="#"
-          className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-gray-100/50 data-[state=open]:bg-gray-100/50 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus:bg-gray-800 dark:focus:text-gray-50 dark:data-[active]:bg-gray-800/50 dark:data-[state=open]:bg-gray-800/50"
-          prefetch={false}
-        >
-          Learn
-        </Link>
-        <Link
-          href="#"
-          className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-gray-100/50 data-[state=open]:bg-gray-100/50 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus:bg-gray-800 dark:focus:text-gray-50 dark:data-[active]:bg-gray-800/50 dark:data-[state=open]:bg-gray-800/50"
-          prefetch={false}
-        >
-          Questions
-        </Link>
-        <Link
-          href="#"
-          className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-gray-100/50 data-[state=open]:bg-gray-100/50 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus:bg-gray-800 dark:focus:text-gray-50 dark:data-[active]:bg-gray-800/50 dark:data-[state=open]:bg-gray-800/50"
-          prefetch={false}
-        >
-          Community
-        </Link>
-        <Link to="/login">
-          <Button>Signin</Button>
-        </Link>
-        </div>):(<div className='flex gap-4'>
-          
-          <Button onClick={handleLogout}>logout</Button>
-        <Link to="/profile">
-          <Button className={"bg-green-500"}>Profile</Button>
-        </Link>
-        </div>)}
+        {!isAuthenticated ? (
+          <div>
+            <Link
+              href="#"
+              className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-gray-100/50 data-[state=open]:bg-gray-100/50 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus:bg-gray-800 dark:focus:text-gray-50 dark:data-[active]:bg-gray-800/50 dark:data-[state=open]:bg-gray-800/50"
+              prefetch={false}
+            >
+              Docs
+            </Link>
+            <Link
+              href="#"
+              className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-gray-100/50 data-[state=open]:bg-gray-100/50 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus:bg-gray-800 dark:focus:text-gray-50 dark:data-[active]:bg-gray-800/50 dark:data-[state=open]:bg-gray-800/50"
+              prefetch={false}
+            >
+              Learn
+            </Link>
+            <Link
+              href="#"
+              className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-gray-100/50 data-[state=open]:bg-gray-100/50 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus:bg-gray-800 dark:focus:text-gray-50 dark:data-[active]:bg-gray-800/50 dark:data-[state=open]:bg-gray-800/50"
+              prefetch={false}
+            >
+              Questions
+            </Link>
+            <Link
+              href="#"
+              className="group inline-flex h-9 w-max items-center justify-center rounded-md bg-white px-4 py-2 text-sm font-medium transition-colors hover:bg-gray-100 hover:text-gray-900 focus:bg-gray-100 focus:text-gray-900 focus:outline-none disabled:pointer-events-none disabled:opacity-50 data-[active]:bg-gray-100/50 data-[state=open]:bg-gray-100/50 dark:bg-gray-950 dark:hover:bg-gray-800 dark:hover:text-gray-50 dark:focus:bg-gray-800 dark:focus:text-gray-50 dark:data-[active]:bg-gray-800/50 dark:data-[state=open]:bg-gray-800/50"
+              prefetch={false}
+            >
+              Community
+            </Link>
+            <Link to="/login">
+              <Button>Signin</Button>
+            </Link>
+          </div>
+        ) : (
+          <div className="flex gap-4">
+            <Button onClick={handleLogout}>logout</Button>
+            <Link to="/profile">
+              <Button className={'bg-green-500'}>Profile</Button>
+            </Link>
+          </div>
+        )}
       </nav>
     </header>
   );
