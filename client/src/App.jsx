@@ -1,86 +1,103 @@
-import { Routes, Route, Navigate } from 'react-router-dom';
-import { Toaster } from 'react-hot-toast';
-import Login from './pages/auth/Login';
-import Signup from './pages/auth/signup';
-import Home from './pages/Home';
-import ProtectedRoute from './components/ProtectedRoute';
-import PublicRoute from './components/PublicRoute';
-import { useSelector } from 'react-redux';
-import { selectIsAuthenticated } from './store/slices/authSlice';
-import UpdatePassword from './pages/auth/components/UpdatePassword';
-import Profile from './pages/Profile.jsx';
-import Navbar from './components/shared/Navbar';
+import React from "react";
+import { Routes, Route, Navigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { Toaster } from "react-hot-toast";
 
-const App = () => {
+// Store
+import { selectIsAuthenticated } from "./store/slices/authSlice";
+
+// Hooks
+import useAuthInit from "./lib/useAuthInit.js";
+
+import Navbar from "./components/shared/Navbar";
+
+// Pages
+import Login from "./pages/auth/Login";
+import Signup from "./pages/auth/Signup";
+import Home from "./pages/Home";
+import Profile from "./pages/Profile";
+import UpdatePassword from "./pages/auth/components/UpdatePassword";
+
+const AuthInitializer = ({ children }) => {
+  useAuthInit();
+  return children;
+};
+
+export default function App() {
+  return (
+    <AuthInitializer>
+      <Main />
+    </AuthInitializer>
+  );
+}
+
+const Main = () => {
   const isAuthenticated = useSelector(selectIsAuthenticated);
 
   return (
     <>
       {isAuthenticated && <Navbar />}
-      <Toaster position="top-center" reverseOrder={false} />
+      <Toaster
+        position="top-center"
+        reverseOrder={false}
+        toastOptions={{
+          duration: 4000,
+          style: {
+            background: "#363636",
+            color: "#fff",
+          },
+        }}
+      />
       <Routes>
-        {/* Public Routes - Only accessible when not authenticated */}
-        <Route 
-          path="/login" 
-          element={
-            <PublicRoute>
-              <Login />
-            </PublicRoute>
-          } 
+        {/* Auth Routes */}
+        <Route
+          path="/login"
+          element={isAuthenticated ? <Navigate to="/home" replace /> : <Login />}
         />
-        <Route 
-          path="/signup" 
-          element={
-            <PublicRoute>
-              <Signup />
-            </PublicRoute>
-          } 
+        <Route
+          path="/signup"
+          element={isAuthenticated ? <Navigate to="/home" replace /> : <Signup />}
         />
-        
-        {/* Protected Routes - Only accessible when authenticated */}
+
+        {/* App Routes */}
         <Route
           path="/home"
-          element={
-            <ProtectedRoute>
-              <Home />
-            </ProtectedRoute>
-          }
+          element={isAuthenticated ? <Home /> : <Navigate to="/login" replace />}
         />
         <Route
           path="/profile"
-          element={
-            <ProtectedRoute>
-              <Profile />
-            </ProtectedRoute>
-          }
+          element={isAuthenticated ? <Profile /> : <Navigate to="/login" replace />}
         />
         <Route
           path="/update-password"
-          element={
-            <ProtectedRoute>
-              <UpdatePassword />
-            </ProtectedRoute>
-          }
+          element={isAuthenticated ? <UpdatePassword /> : <Navigate to="/login" replace />}
         />
-        
+
         {/* Root Route - Redirect based on auth status */}
         <Route
           path="/"
           element={
-            isAuthenticated ? <Navigate to="/home" replace /> : <Navigate to="/login" replace />
+            isAuthenticated ? (
+              <Navigate to="/home" replace />
+            ) : (
+              <Navigate to="/login" replace />
+            )
           }
         />
-        
+
         {/* Catch all route - Redirect to appropriate page based on auth status */}
-        <Route 
-          path="*" 
+        <Route
+          path="*"
           element={
-            isAuthenticated ? <Navigate to="/home" replace /> : <Navigate to="/login" replace />
-          } 
+            isAuthenticated ? (
+              <Navigate to="/home" replace />
+            ) : (
+              <Navigate to="/login" replace />
+            )
+          }
         />
       </Routes>
     </>
   );
 };
 
-export default App;

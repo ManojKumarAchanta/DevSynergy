@@ -29,13 +29,13 @@ export default async function sendEmail({ email, emailType, userId }) {
       host: 'smtp.gmail.com',
       port: 465,
       auth: {
-        user: process.env.MAILTRAP_USER,
-        pass: process.env.MAILTRAP_PASS,
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_PASS,
       },
     });
 
     const emailOptions = {
-      from: process.env.SOURCE_EMAIL,
+      from: process.env.GMAIL,
       to: email,
       subject:
         emailType === 'VERIFY' ? 'Verify your email' : 'Reset your password',

@@ -26,13 +26,16 @@ export const login = async (req, res) => {
         .json({ message: 'Invalid credentials', success: false });
     }
     const { accessToken, refreshToken } = generateTokens(user);
-    
+
     // Set cookie
+    const secureCookie = process.env.NODE_ENV === 'production';
+    console.log('Setting refresh token cookie');
+    const isProduction = process.env.NODE_ENV === 'production';
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'Strict',
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      secure: isProduction,
+      sameSite: isProduction ? 'None' : 'Lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     return res.status(200).json({
@@ -79,6 +82,21 @@ export const signup = async (req, res) => {
 
     console.log('Saving new user...');
     const newUser = await userInstance.save();
+    // Try sending verification email
+
+    //send verification email
+    try {
+      await sendEmail({ email, emailType: 'VERIFY', userId: newUser._id });
+    } catch (emailError) {
+      // Rollback user creation if email fails
+      await User.findByIdAndDelete(newUser._id);
+      console.error('Email sending failed, user deleted:', emailError.message);
+      return res.status(500).json({
+        message: 'Verification email failed to send. Please try again.',
+        success: false,
+      });
+    }
+
     console.log('New User Saved:', newUser); // 👈 THIS is important
 
     if (!newUser || !newUser._id) {
@@ -89,16 +107,14 @@ export const signup = async (req, res) => {
       });
     }
 
-    //send verification email
-    await sendEmail({ email, emailType: 'VERIFY', userId: newUser._id });
-
     //generate tokens
     const { accessToken, refreshToken } = generateTokens(newUser);
+    const isProduction = process.env.NODE_ENV === 'production';
     res.cookie('refreshToken', refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV == 'production',
-      sameSite: 'Strict',
-      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+      secure: isProduction,
+      sameSite: isProduction ? 'None' : 'Lax',
+      maxAge: 7 * 24 * 60 * 60 * 1000,
     });
 
     return res.status(201).json({
@@ -119,20 +135,20 @@ export const refreshToken = async (req, res) => {
   try {
     // Get refresh token from either cookies or request body
     const refreshToken = req.cookies.refreshToken || req.body.refreshToken;
-    
+
     if (!refreshToken) {
-      return res.status(401).json({ 
-        message: 'No refresh token found', 
-        success: false 
+      return res.status(401).json({
+        message: 'No refresh token found',
+        success: false,
       });
     }
 
     // Verify refresh token
     const decoded = jwt.verify(refreshToken, process.env.REFRESH_SECRET);
     if (!decoded || !decoded.id) {
-      return res.status(403).json({ 
-        message: 'Invalid refresh token', 
-        success: false 
+      return res.status(403).json({
+        message: 'Invalid refresh token',
+        success: false,
       });
     }
 
@@ -144,22 +160,22 @@ export const refreshToken = async (req, res) => {
     );
 
     // Send new access token
-    return res.status(200).json({ 
+    return res.status(200).json({
       message: 'Token refreshed successfully',
-      accessToken: newAccessToken, 
-      success: true 
+      accessToken: newAccessToken,
+      success: true,
     });
   } catch (err) {
     console.error('Refresh token error:', err);
     if (err.name === 'TokenExpiredError') {
-      return res.status(401).json({ 
-        message: 'Refresh token expired', 
-        success: false 
+      return res.status(401).json({
+        message: 'Refresh token expired',
+        success: false,
       });
     }
-    return res.status(403).json({ 
-      message: 'Invalid refresh token', 
-      success: false 
+    return res.status(403).json({
+      message: 'Invalid refresh token',
+      success: false,
     });
   }
 };
@@ -205,7 +221,7 @@ export async function verifyemail(req, res) {
       .json({ message: 'Email verified successfully', success: true });
   } catch (error) {
     console.log('Error in verify email route:', error);
-    return res.status(200).json({ error: 'Error verifying email' });
+    return res.status(500).json({ error: 'Error verifying email' });
   }
 }
 export async function forgotPassword(req, res) {

@@ -1,19 +1,22 @@
-import { Sheet, SheetTrigger, SheetContent } from '@/components/ui/sheet';
-import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { selectIsAuthenticated } from '@/store/slices/authSlice';
-import { useLogoutMutation } from '@/store/services/authApi';
-import toast from 'react-hot-toast';
+import { Sheet, SheetTrigger, SheetContent } from "@/components/ui/sheet";
+import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectIsAuthenticated } from "@/store/slices/authSlice";
+import { useLogoutMutation } from "@/store/services/authApi";
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export default function Navbar() {
   const [logout, { isError, isLoading }] = useLogoutMutation();
+  const navigate = useNavigate();
   const handleLogout = async () => {
     try {
       await logout().unwrap();
-      toast.success('Logged out Successfully!');
+      toast.success("Logged out Successfully!");
+      navigate("/login")
     } catch (error) {
-      toast.error('Failed to logout');
+      toast.error("Failed to logout");
       console.log(error);
     }
   };
@@ -103,7 +106,7 @@ export default function Navbar() {
           <div className="flex gap-4">
             <Button onClick={handleLogout}>logout</Button>
             <Link to="/profile">
-              <Button className={'bg-green-500'}>Profile</Button>
+              <Button className={"bg-green-500"}>Profile</Button>
             </Link>
           </div>
         )}
