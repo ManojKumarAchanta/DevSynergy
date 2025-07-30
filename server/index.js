@@ -33,11 +33,11 @@ app.use(
 
 app.use(cookieParser());
 //routes
-app.use('/auth', authRouter);
-app.use('/profile', authMiddleware, profileRouter);
-app.use('/posts', authMiddleware, postRouter);
-app.use('/comments', authMiddleware, commentRouter);
-app.use('/like', authMiddleware, likeRouter);
+app.use('/api/auth', authRouter);
+app.use('/api/profile', authMiddleware, profileRouter);
+app.use('/api/posts', authMiddleware, postRouter);
+app.use('/api/comments', authMiddleware, commentRouter);
+app.use('/api/like', authMiddleware, likeRouter);
 
 app.listen(PORT, () => {
   connectToDB();

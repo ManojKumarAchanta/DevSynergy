@@ -1,1 +1,1 @@
-export const BASE_URL = "http://localhost:8000/auth";
+export const BASE_URL = "https://devsynergy-server.onrender.com/auth";
